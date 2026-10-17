@@ -17,7 +17,11 @@ export const skillGroups: SkillGroup[] = [
     note: "Used in projects and coursework",
     categories: [
       { id: "programming", title: "Programming", skills: ["Python", "C++", "MATLAB"] },
-      { id: "ml-vision", title: "ML & vision", skills: ["PyTorch", "OpenCV"] },
+      {
+        id: "ml-vision",
+        title: "ML & vision",
+        skills: ["PyTorch", "Detectron2", "torch-geometric", "OpenCV"],
+      },
       { id: "robotics", title: "Robotics", skills: ["ROS"] },
       {
         id: "embedded",
@@ -40,7 +44,7 @@ export const skillGroups: SkillGroup[] = [
       {
         id: "relations",
         title: "Relation reasoning",
-        skills: ["Visual Relation Reasoning", "Graph Transformers", "Dependency Graphs"],
+        skills: ["Visual Relation Reasoning", "Graph Transformer Dense", "Dependency Graphs"],
       },
       {
         id: "deep-learning",

@@ -67,6 +67,13 @@ from what Yue wants to research next:
 
 - Experience (projects, "My contribution", tools & methods) contains only
   facts from Yue's own project descriptions.
+- Everything about the Bachelor's thesis (contribution, architecture, training
+  configuration, losses, metrics, results, figures, limitations, references)
+  follows the **final thesis PDF**; section, table and figure numbers are noted
+  in comments in `data/research.ts`. Prior work (D3G, DETR, Deformable DETR,
+  Graph Transformer, MetaGraspNetV2) is credited in `priorWork` / `references`
+  and never presented as Yue's own. Results are reported as mixed, exactly as in
+  thesis Table 4-2.
 - Future topics (3D perception, object pose estimation, learning-based
   grasping, grasp execution on robots) appear only in `currentlyInterestedIn`,
   in pipeline stages marked `coverage: "next"` and in the thesis
@@ -77,13 +84,10 @@ Unknown facts are left as `null` / `TODO(Yue)` in the data layer and are
 
 - `profile.email.academic` — TU Chemnitz address (only add once confirmed)
 - `profile.links[*].url` — GitHub, LinkedIn, Google Scholar, ORCID
-- `flagshipResearch.results` — quantitative thesis results (a results table appears once set)
 - `internationalExperience[0].institution` — summer-school host institution
 - vehicle project platform (controller, sensors, frameworks) in `data/projects.ts`
 
-To review before sending the link: `flagshipResearch.contributions` (which parts
-you implemented vs. adapted), the metric descriptions in `flagshipResearch.evaluation`,
-and the first-person texts `profile.about.perspective` and `flagshipResearch.learned`.
+To review before sending the link: the first-person text `profile.about.perspective`.
 
 ## Common tasks
 
@@ -115,12 +119,15 @@ sitemap automatically.
   visible but deliberately less prominent.
 - To attach an award, add it to `data/awards.ts` with `project: "<slug>"`.
 
-### Add coursework or verified results
+### Add coursework or thesis evidence
 
 - Coursework: extend `coursework` in `data/education.ts`.
-- Thesis results: replace `results: null` in `data/research.ts` with rows such as
-  `{ metric: "OP", setting: "MetaGraspNetV2 Synthetic", value: "…" }`. Only add
-  numbers that are final and verified.
+- Thesis results live in `flagshipResearch.results.rows` (one `ThesisResultRow`
+  per model and split, copied from thesis Table 4-2). The results table and the
+  per-split "higher / lower" summary are generated from these rows.
+- Thesis figures are stored in `public/research/cluttered-grasp/` (extracted
+  from the thesis PDF, not page screenshots) and referenced from
+  `flagshipResearch.figures`.
 
 ### "Replace the CV"
 

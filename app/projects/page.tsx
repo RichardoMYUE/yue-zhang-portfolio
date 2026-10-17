@@ -41,7 +41,7 @@ export default function ProjectsPage() {
           >
             <div>
               <p className="eyebrow text-accent">
-                Main research project · {thesis.type} · {formatPeriod(thesis.period).replace(" – ", "–")}
+                Main research project · {thesis.type} · {formatPeriod(thesis.period)}
               </p>
               <p className="mt-2 font-serif text-xl font-semibold text-ink">{thesis.title}</p>
             </div>

@@ -2,123 +2,99 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { TagList } from "@/components/ui/TechnologyTag";
 import { education, internationalExperience } from "@/data/education";
-import type { EducationEntry, ExperienceEntry } from "@/data/types";
 import { cn, formatPeriod } from "@/lib/utils";
-
-type TimelineItem =
-  | { kind: "education"; entry: EducationEntry }
-  | { kind: "experience"; entry: ExperienceEntry };
-
-/** "10/2026" → sortable number. */
-function sortKey(period: { start: string }) {
-  const [month, year] = period.start.includes("/")
-    ? period.start.split("/").map(Number)
-    : [1, Number(period.start)];
-  return year * 12 + month;
-}
-
-function journey(): TimelineItem[] {
-  const items: TimelineItem[] = [
-    ...education.map((entry) => ({ kind: "education" as const, entry })),
-    ...internationalExperience.map((entry) => ({ kind: "experience" as const, entry })),
-  ];
-  return items.sort((a, b) => sortKey(b.entry.period) - sortKey(a.entry.period));
-}
 
 interface EducationTimelineProps {
   /** Number of courses to show per degree (all when omitted). */
   courseLimit?: number;
+  /** Show non-degree academic experience (e.g. summer school) below the timeline. */
+  showAdditional?: boolean;
 }
 
-/** Education and international experience, newest first. */
-export function EducationTimeline({ courseLimit }: EducationTimelineProps) {
-  const items = journey();
-
+/**
+ * Degrees only (newest first). Non-degree experience such as the summer
+ * school is listed separately so it never reads as a degree on the timeline.
+ */
+export function EducationTimeline({ courseLimit, showAdditional = false }: EducationTimelineProps) {
   return (
-    <ol className="relative">
-      {items.map((item, index) => {
-        const last = index === items.length - 1;
-        const current = item.kind === "education" && item.entry.current;
-        const minor = item.kind === "experience";
-        return (
-          <li key={item.entry.id} className={cn("relative pl-8", !last && "pb-9")}>
-            {!last ? (
-              <span aria-hidden className="absolute top-3 bottom-0 left-[0.3125rem] w-px bg-line" />
-            ) : null}
-            <span
-              aria-hidden
-              className={cn(
-                "absolute rounded-full border-2",
-                minor
-                  ? "top-[0.5rem] left-[0.0625rem] size-2.5 border-line-strong bg-paper"
-                  : "top-[0.4375rem] left-0 size-3",
-                !minor && (current ? "border-accent bg-accent" : "border-ink-subtle bg-paper"),
-              )}
-            />
-
-            <p className="font-mono text-[0.75rem] text-ink-subtle">
-              {formatPeriod(item.entry.period)}
-              {current ? (
-                <span className="ml-2 rounded bg-accent-soft px-1.5 py-0.5 text-accent-strong">
-                  current
-                </span>
+    <div>
+      <ol className="relative">
+        {education.map((entry, index) => {
+          const last = index === education.length - 1;
+          return (
+            <li key={entry.id} className={cn("relative pl-8", !last && "pb-9")}>
+              {!last ? (
+                <span aria-hidden className="absolute top-3 bottom-0 left-[0.3125rem] w-px bg-line" />
               ) : null}
-            </p>
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute top-[0.4375rem] left-0 size-3 rounded-full border-2",
+                  entry.current ? "border-accent bg-accent" : "border-ink-subtle bg-paper",
+                )}
+              />
 
-            {item.kind === "education" ? (
-              <>
-                <h3 className="mt-1.5 text-lg leading-snug font-medium text-ink">
-                  {item.entry.degree}
-                </h3>
-                <p className="mt-0.5 text-[0.9375rem] text-ink-muted">
-                  {item.entry.institution}
-                  <span className="text-ink-subtle"> · {item.entry.location}</span>
+              <p className="font-mono text-[0.75rem] text-ink-subtle">
+                {formatPeriod(entry.period)}
+                {entry.current ? (
+                  <span className="ml-2 rounded bg-accent-soft px-1.5 py-0.5 text-accent-strong">current</span>
+                ) : null}
+              </p>
+              <h3 className="mt-1.5 text-lg leading-snug font-medium text-ink">{entry.degree}</h3>
+              <p className="mt-0.5 text-[0.9375rem] text-ink-muted">
+                {entry.institution}
+                <span className="text-ink-subtle"> · {entry.location}</span>
+              </p>
+
+              {entry.focus ? (
+                <div className="mt-3">
+                  <p className="mb-1.5 text-sm text-ink-subtle">{entry.focusLabel}</p>
+                  <TagList tags={entry.focus} tone="quiet" label={entry.focusLabel} />
+                </div>
+              ) : null}
+
+              {entry.thesis ? (
+                <p className="mt-3 text-[0.9375rem] text-ink-muted">
+                  <span className="text-ink-subtle">Thesis: </span>
+                  <Link
+                    href={entry.thesis.href}
+                    className="text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent"
+                  >
+                    {entry.thesis.label}
+                    <ArrowUpRight aria-hidden className="ml-1 inline size-3.5 align-[-0.125em] text-ink-subtle" />
+                  </Link>
                 </p>
+              ) : null}
 
-                {item.entry.focus ? (
-                  <div className="mt-3">
-                    <p className="mb-1.5 text-sm text-ink-subtle">{item.entry.focusLabel}</p>
-                    <TagList tags={item.entry.focus} tone="quiet" label={item.entry.focusLabel} />
-                  </div>
-                ) : null}
-
-                {item.entry.thesis ? (
-                  <p className="mt-3 text-[0.9375rem] text-ink-muted">
-                    <span className="text-ink-subtle">Thesis: </span>
-                    <Link
-                      href={item.entry.thesis.href}
-                      className="inline-flex items-start gap-1 text-ink underline decoration-line-strong underline-offset-4 hover:decoration-accent"
-                    >
-                      {item.entry.thesis.label}
-                      <ArrowUpRight aria-hidden className="mt-1 size-3.5 shrink-0 text-ink-subtle" />
-                    </Link>
-                  </p>
-                ) : null}
-
-                {item.entry.coursework ? (
-                  <p className="mt-2 text-sm leading-relaxed text-ink-subtle">
-                    <span className="text-ink-muted">Coursework: </span>
-                    {(courseLimit ? item.entry.coursework.slice(0, courseLimit) : item.entry.coursework).join(
-                      " · ",
-                    )}
-                    {courseLimit && item.entry.coursework.length > courseLimit ? " · …" : null}
-                  </p>
-                ) : null}
-              </>
-            ) : (
-              <>
-                <h3 className="mt-1.5 text-base leading-snug font-medium text-ink">
-                  {item.entry.title}
-                </h3>
-                <p className="mt-0.5 text-sm text-ink-muted">
-                  {item.entry.institution ? `${item.entry.institution} · ` : null}
-                  {item.entry.location}
+              {entry.coursework ? (
+                <p className="mt-2 text-sm leading-relaxed text-ink-subtle">
+                  <span className="text-ink-muted">Coursework: </span>
+                  {(courseLimit ? entry.coursework.slice(0, courseLimit) : entry.coursework).join(" · ")}
+                  {courseLimit && entry.coursework.length > courseLimit ? " · …" : null}
                 </p>
-              </>
-            )}
-          </li>
-        );
-      })}
-    </ol>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+
+      {showAdditional && internationalExperience.length > 0 ? (
+        <div className="mt-9 border-t border-dashed border-line-strong pt-5">
+          <p className="eyebrow">Additional academic experience</p>
+          <ul className="mt-3 space-y-2">
+            {internationalExperience.map((entry) => (
+              <li key={entry.id} className="text-[0.9375rem]">
+                <span className="text-ink">{entry.title}</span>
+                <span className="text-ink-subtle">
+                  {" "}
+                  · {entry.institution ? `${entry.institution}, ` : ""}
+                  {entry.location} · <span className="font-mono text-[0.8125rem]">{formatPeriod(entry.period)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   );
 }

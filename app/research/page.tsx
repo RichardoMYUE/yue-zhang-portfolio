@@ -66,7 +66,7 @@ export default function ResearchPage() {
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[0.8125rem] text-ink-muted">
               <li className="text-accent">{thesis.type}</li>
               <li>{thesis.institution}</li>
-              <li>{formatPeriod(thesis.period).replace(" – ", "–")}</li>
+              <li>{formatPeriod(thesis.period)}</li>
             </ul>
           </Reveal>
           <Reveal className="mt-8 grid gap-x-10 gap-y-4 text-[1.0625rem] leading-relaxed lg:grid-cols-2">

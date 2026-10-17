@@ -312,6 +312,11 @@ export function ResearchArchitectureDiagram({ className, figureLabel = "Figure 1
                   <p className="mt-1 font-mono text-[0.75rem] leading-snug text-accent">{stage.method}</p>
                 ) : null}
                 <p className="mt-1 text-[0.8125rem] leading-snug text-ink-subtle">{stage.detail}</p>
+                {stage.badge ? (
+                  <p className="mt-2 inline-flex w-fit rounded border border-accent/50 bg-accent-soft px-1.5 py-0.5 font-mono text-[0.6875rem] text-accent-strong">
+                    {stage.badge}
+                  </p>
+                ) : null}
               </div>
             </div>
             {index < stages.length - 1 ? (
@@ -333,7 +338,7 @@ export function ResearchArchitectureDiagram({ className, figureLabel = "Figure 1
             <div className="grid gap-4 lg:grid-cols-[14rem_minmax(0,1fr)] lg:items-center lg:gap-8">
               <div>
                 <p className="font-mono text-[0.6875rem] tracking-wide text-ink-subtle uppercase">
-                  {String(stages.length + 1).padStart(2, "0")} · Downstream use
+                  {String(stages.length + 1).padStart(2, "0")} · Downstream use · not part of the thesis
                 </p>
                 <p className="mt-1 text-[0.9375rem] font-medium text-ink">{downstream.label}</p>
                 <p className="mt-0.5 text-[0.8125rem] leading-snug text-ink-subtle">{downstream.detail}</p>
@@ -361,9 +366,11 @@ export function ResearchArchitectureDiagram({ className, figureLabel = "Figure 1
 
       <figcaption className="mt-4 max-w-[80ch] text-[0.8125rem] leading-relaxed text-ink-subtle">
         <span className="font-medium text-ink-muted">{figureLabel}.</span> Schematic of the thesis
-        pipeline (01–05) and the downstream use it is designed for (06). An edge X → Y means X has
-        to be removed before Y can be grasped. Scene, relations and grasp order are illustrative,
-        not experimental output.
+        pipeline (01–05) and the downstream use it is intended for (06, not implemented). An edge
+        X → Y means X has to be removed before Y can be grasped. The direction loss added in the
+        thesis supervises the orientation of these edges. Scene, relations and grasp order are
+        illustrative, not experimental output; real model outputs are shown in the qualitative
+        examples on the thesis page.
       </figcaption>
     </figure>
   );

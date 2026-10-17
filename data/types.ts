@@ -135,18 +135,8 @@ export interface ArchitectureStage {
   /** Method used for it, e.g. "Deformable DETR" (secondary to the role). */
   method?: string;
   detail: string;
-}
-
-export interface Metric {
-  abbr: string;
-  name: string;
-  description: string;
-}
-
-export interface MetricGroup {
-  title: string;
-  description: string;
-  metrics: Metric[];
+  /** Short marker for the part changed in the thesis, e.g. the direction loss. */
+  badge?: string;
 }
 
 export interface TitledText {
@@ -155,50 +145,173 @@ export interface TitledText {
   link?: LinkRef;
 }
 
+export interface LabelledValue {
+  label: string;
+  value: string;
+}
+
+/* ---------- Bachelor's thesis: evidence-backed content ---------- */
+
+/** Ids of entries in `FlagshipResearch.references`. */
+export type ReferenceId = "metagraspnetv2" | "d3g" | "detr" | "deformable-detr" | "gtn";
+
+export interface Reference {
+  id: ReferenceId;
+  authors: string;
+  title: string;
+  venue: string;
+  year: number;
+  /** Volume / pages exactly as listed in the thesis bibliography. */
+  details?: string;
+  /** What this page relies on the work for. */
+  usedFor: string;
+}
+
+/** Prior work the thesis builds on — not Yue's contribution. */
+export interface PriorWork {
+  what: string;
+  ref: ReferenceId;
+}
+
+export interface Metric {
+  /** Name as used in the thesis (e.g. "OP", "w_rel_mAP"). */
+  abbr: string;
+  name: string;
+  description: string;
+}
+
+export type ThesisSplit = "easy" | "medium" | "hard";
+export type ThesisModelId = "baseline" | "direction";
+
+export interface ThesisModel {
+  id: ThesisModelId;
+  name: string;
+  description: string;
+}
+
+/** One row of thesis Table 4-2. */
+export interface ThesisResultRow {
+  model: ThesisModelId;
+  split: ThesisSplit;
+  OP: number;
+  OR: number;
+  IA: number;
+  wRel: number;
+  wPhr: number;
+  microR50: number;
+  score: number;
+}
+
+export type ThesisMetricKey = Exclude<keyof ThesisResultRow, "model" | "split">;
+
+export interface ThesisFigure {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** Figure number in the thesis, e.g. "Fig. 4-4". */
+  source: string;
+  caption: string;
+}
+
+export interface DirectionConstraint {
+  /** Why the baseline relation loss is not enough. */
+  gap: string;
+  /** Plain-language description of the added loss. */
+  idea: string;
+  /** What each relation loss supervises (existence vs. orientation). */
+  supervises: { baseline: string; direction: string };
+  /** Rules that define the loss, in order. */
+  rules: string[];
+  /** Total objective, rendered as text. */
+  objective: string;
+  weights: LabelledValue[];
+}
+
 export interface FlagshipResearch {
   slug: string;
   href: string;
   title: string;
+  /** Title of the submitted thesis in its original language. */
+  originalTitle: string;
   shortTitle: string;
   type: string;
   institution: string;
   institutionShort: string;
   period: Period;
-  /** Two-sentence summary used on the CV. */
-  summary: string[];
+  /** One sentence for metadata and cards. */
+  summary: string;
   /** One-paragraph lead for the detail page header. */
   lead: string;
-  /** Research narrative (problem → what was investigated), homepage and /research. */
+  /** Research narrative (problem → what was done), homepage and /research. */
   narrative: string[];
   motivation: string;
-  /** Follow-up paragraph under the motivation on the detail page. */
   motivationDetail: string;
   problem: string[];
-  /** Only contributions supported by Yue's own description of the project. */
+  /** What the thesis builds on (credited to the original authors). */
+  priorWork: PriorWork[];
+  /** What Yue did in the thesis. */
   contributions: string[];
+  /** One sentence naming the part that is new in this thesis. */
+  increment: string;
+  /** Three short bullets for the homepage. */
+  highlights: string[];
+  /** Homepage evidence block: how the work was evaluated. */
+  evidence: LabelledValue[];
+  /** One-line, honest summary of the quantitative outcome. */
+  outcome: string;
+  /** Short credit line naming the prior work the thesis builds on. */
+  creditLine: string;
+  /** Compact CV bullets. */
+  cvBullets: string[];
   architecture: ArchitectureStage[];
-  method: TitledText[];
-  /** What the evaluation covers and what is left for future work. */
+  /** Baseline relation learning, as reproduced. */
+  baselineMethod: TitledText[];
+  direction: DirectionConstraint;
+  /** What was implemented and evaluated — and what was not. */
   scope: string;
-  datasets: TitledText[];
+  setup: {
+    data: TitledText[];
+    splits: { split: ThesisSplit; definition: string }[];
+    training: TitledText[];
+    config: LabelledValue[];
+    configNote: string;
+  };
   evaluation: {
     intro: string;
-    groups: MetricGroup[];
+    relationMetrics: Metric[];
+    detectionNote: string;
   };
-  /**
-   * Quantitative results. Leave `null` until verified numbers are
-   * available — nothing is rendered while this is null.
-   */
-  results: { metric: string; value: string; setting: string }[] | null;
+  results: {
+    source: string;
+    models: ThesisModel[];
+    rows: ThesisResultRow[];
+    summary: string[];
+  };
+  training: {
+    points: string[];
+    caveat: string;
+  };
+  figures: {
+    inputScene: ThesisFigure;
+    baselineGraph: ThesisFigure;
+    directionGraph: ThesisFigure;
+    totalLoss: ThesisFigure;
+    relationLosses: ThesisFigure;
+  };
+  qualitative: {
+    legend: string[];
+    observation: string;
+    caveat: string;
+  };
+  findings: string[];
+  limitations: string[];
   /** Software, models and data used. */
   technologies: string[];
-  /** Methods / research topics of the project. */
-  methods: string[];
-  /** Compact tag list for the CV entry. */
-  cvKeywords: string[];
-  learned: TitledText[];
   futureIntro: string;
   future: TitledText[];
+  references: Reference[];
 }
 
 /* ------------------------------------------------------------------ */

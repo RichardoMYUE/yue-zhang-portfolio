@@ -1,14 +1,14 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { TagList } from "@/components/ui/TechnologyTag";
 import { flagshipResearch as thesis } from "@/data/research";
 import { formatPeriod } from "@/lib/utils";
 import { ResearchArchitectureDiagram } from "./ResearchArchitectureDiagram";
 
 /**
  * The flagship project block — the largest content block on the homepage.
- * Order: research problem → what was investigated → architecture →
- * what Yue did → data and evaluation.
+ * Order: research problem → what was done → architecture → what Yue did →
+ * evidence (how it was evaluated, and what came out).
  */
 export function FeaturedResearch() {
   return (
@@ -23,7 +23,7 @@ export function FeaturedResearch() {
           <li aria-hidden className="hidden text-line-strong sm:block">
             /
           </li>
-          <li>{formatPeriod(thesis.period).replace(" – ", "–")}</li>
+          <li>{formatPeriod(thesis.period)}</li>
         </ul>
       </div>
 
@@ -40,36 +40,51 @@ export function FeaturedResearch() {
           <ResearchArchitectureDiagram />
         </div>
 
-        <div className="mt-10 grid gap-8 border-t border-line pt-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-12">
+        <div className="mt-10 grid gap-8 border-t border-line pt-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-12">
           <div>
-            <p className="eyebrow">My contribution</p>
+            <p className="eyebrow">What I did</p>
             <ul className="mt-3 space-y-2">
-              {thesis.contributions.map((item) => (
+              {thesis.highlights.map((item) => (
                 <li key={item} className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink">
                   <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-accent" />
                   {item}
                 </li>
               ))}
             </ul>
+            <p className="mt-4 text-[0.8125rem] leading-relaxed text-ink-subtle">{thesis.creditLine}</p>
           </div>
-          <div className="space-y-6">
-            <div>
-              <p className="eyebrow">Tools, models & data</p>
-              <TagList tags={thesis.technologies} className="mt-3" label="Tools, models and data" />
-            </div>
-            <div>
-              <p className="eyebrow">Evaluation data</p>
-              <p className="mt-2 text-[0.9375rem] text-ink-muted">
-                {thesis.datasets.map((dataset) => dataset.title).join(" · ")}
-              </p>
-            </div>
+          <div>
+            <p className="eyebrow">Evidence</p>
+            <dl className="mt-3 divide-y divide-line rounded-xl border border-line">
+              {thesis.evidence.map((item) => (
+                <div key={item.label} className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 px-4 py-2.5 text-[0.875rem]">
+                  <dt className="text-ink-subtle">{item.label}</dt>
+                  <dd className="text-ink">{item.value}</dd>
+                </div>
+              ))}
+              <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3 px-4 py-2.5 text-[0.875rem]">
+                <dt className="text-ink-subtle">Outcome</dt>
+                <dd className="text-ink">
+                  {thesis.outcome}{" "}
+                  <Link
+                    href={`${thesis.href}#results`}
+                    className="whitespace-nowrap text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+                  >
+                    Full results
+                  </Link>
+                </dd>
+              </div>
+            </dl>
+            <p className="mt-3 text-[0.8125rem] text-ink-subtle">
+              {thesis.technologies.join(" · ")}
+            </p>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-[60ch] text-[0.9375rem] text-ink-muted">
-            Problem, method, evaluation methodology and how this work could extend towards 3D
-            perception and grasp planning.
+            Method, direction constraint, setup, complete results table, training curves and real
+            dependency-graph outputs.
           </p>
           <ButtonLink href={thesis.href} className="shrink-0">
             Read the full project

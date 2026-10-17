@@ -7,7 +7,7 @@ import { awards, getAwardsForProject } from "@/data/awards";
 import { education, internationalExperience } from "@/data/education";
 import { getConfiguredLinks, profile, publicEmails } from "@/data/profile";
 import { projectHref, projects } from "@/data/projects";
-import { architectureChain, flagshipResearch as thesis } from "@/data/research";
+import { flagshipResearch as thesis } from "@/data/research";
 import { siteConfig } from "@/data/site";
 import { skillGroups } from "@/data/skills";
 import type { Project } from "@/data/types";
@@ -46,9 +46,6 @@ export default function CvPage() {
   const links = getConfiguredLinks();
   const researchProjects = projects.filter((project) => project.category === "research");
   const engineeringProjects = projects.filter((project) => project.category === "engineering");
-  const metricNames = thesis.evaluation.groups.map((group) =>
-    group.metrics.map((metric) => (metric.abbr.length <= 2 ? metric.abbr : metric.name)).join(", "),
-  );
   const emails = publicEmails();
 
   return (
@@ -156,22 +153,11 @@ export default function CvPage() {
           <CvEntry
             title={thesis.title}
             subtitle={`${thesis.type} · ${thesis.institution}`}
-            period={formatPeriod(thesis.period).replace(" – ", "–")}
+            period={formatPeriod(thesis.period)}
           >
-            {thesis.summary.map((paragraph) => (
-              <p key={paragraph} className="text-ink-muted">
-                {paragraph}
-              </p>
-            ))}
-            <CvLine label="Architecture">
-              <span className="font-mono text-[0.8125rem]">
-                {architectureChain()}
-              </span>
-            </CvLine>
-            <CvLine label="Technical details">{thesis.cvKeywords.join(", ")}</CvLine>
-            <CvLine label="Evaluation methodology">{metricNames.join("; ")}</CvLine>
-            <CvLine label="Data">{thesis.datasets.map((dataset) => dataset.title).join("; ")}</CvLine>
-            <CvDetailLink href={thesis.href} label="Architecture, method and evaluation" />
+            <CvBullets items={thesis.cvBullets} />
+            <CvLine label="Tools">{thesis.technologies.join(", ")}</CvLine>
+            <CvDetailLink href={thesis.href} label="Method, complete results and figures" />
           </CvEntry>
 
           {researchProjects.map((project) => (

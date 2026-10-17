@@ -14,6 +14,8 @@ export const siteConfig = {
     "computer vision",
     "Deformable DETR",
     "Graph Transformer",
+    "dependency graph",
+    "MetaGraspNetV2",
     "TU Chemnitz",
     "Embedded Systems",
   ],

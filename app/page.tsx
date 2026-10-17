@@ -138,7 +138,7 @@ export default function HomePage() {
                 <SectionHeading id="education-title" index="04" eyebrow="Education" title="Academic path" />
               </Reveal>
               <Reveal className="mt-10" delay={0.05}>
-                <EducationTimeline courseLimit={6} />
+                <EducationTimeline courseLimit={6} showAdditional />
               </Reveal>
             </div>
             <section aria-labelledby="awards-title">

@@ -2,6 +2,10 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ResearchArchitectureDiagram } from "@/components/research/ResearchArchitectureDiagram";
+import { DirectionConstraint } from "@/components/research/thesis/DirectionConstraint";
+import { ReferenceList, referenceNumber } from "@/components/research/thesis/ReferenceList";
+import { ResultsTable } from "@/components/research/thesis/ResultsTable";
+import { ThesisFigure } from "@/components/research/thesis/ThesisFigure";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -22,12 +26,15 @@ const sections = [
   { id: "motivation", title: "Motivation" },
   { id: "contribution", title: "My contribution" },
   { id: "architecture", title: "System architecture" },
-  { id: "method", title: "Method" },
-  { id: "dataset", title: "Dataset" },
-  { id: "evaluation", title: "Evaluation" },
-  { id: "technologies", title: "Technologies" },
-  { id: "learned", title: "What I learned" },
+  { id: "method", title: "Direction-aware relation learning" },
+  { id: "setup", title: "Experimental setup" },
+  { id: "metrics", title: "Evaluation metrics" },
+  { id: "results", title: "Results" },
+  { id: "training", title: "Training behaviour" },
+  { id: "qualitative", title: "Qualitative examples" },
+  { id: "findings", title: "What the experiments show" },
   { id: "future", title: "Relation to future research" },
+  { id: "references", title: "Selected references" },
 ] as const;
 
 type SectionId = (typeof sections)[number]["id"];
@@ -54,13 +61,34 @@ function DetailSection({
   );
 }
 
+function SubHeading({ children }: { children: ReactNode }) {
+  return <h3 className="text-lg font-medium text-ink">{children}</h3>;
+}
+
+function Bullets({ items, tone = "muted" }: { items: string[]; tone?: "muted" | "ink" }) {
+  return (
+    <ul className="space-y-2.5">
+      {items.map((item) => (
+        <li
+          key={item}
+          className={`flex gap-3 leading-relaxed ${tone === "ink" ? "text-ink" : "text-ink-muted"}`}
+        >
+          <span aria-hidden className="mt-[0.75em] h-px w-3.5 shrink-0 bg-accent" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function ThesisPage() {
   const nextProject = projects[0];
+  const { figures } = thesis;
   const facts = [
     { label: "Type", value: thesis.type },
     { label: "Institution", value: thesis.institution },
-    { label: "Period", value: formatPeriod(thesis.period).replace(" – ", "–") },
-    { label: "Focus", value: thesis.shortTitle },
+    { label: "Period", value: formatPeriod(thesis.period) },
+    { label: "Original title", value: thesis.originalTitle, lang: "zh-CN" },
   ];
 
   return (
@@ -75,7 +103,9 @@ export default function ThesisPage() {
           {facts.map((fact) => (
             <div key={fact.label} className="bg-surface px-4 py-3">
               <dt className="eyebrow">{fact.label}</dt>
-              <dd className="mt-1 text-[0.9375rem] leading-snug text-ink">{fact.value}</dd>
+              <dd lang={fact.lang} className="mt-1 text-[0.9375rem] leading-snug text-ink">
+                {fact.value}
+              </dd>
             </div>
           ))}
         </dl>
@@ -83,7 +113,7 @@ export default function ThesisPage() {
 
       <Container className="py-12 sm:py-16">
         <div className="xl:grid xl:grid-cols-[13rem_minmax(0,1fr)] xl:gap-14">
-          <nav aria-label="On this page" className="mb-10 xl:mb-0">
+          <nav aria-label="On this page" className="mb-10 xl:mb-0 print:hidden">
             <div className="xl:sticky xl:top-24">
               <p className="eyebrow">On this page</p>
               <ol className="mt-3 flex flex-wrap gap-2 xl:flex-col xl:gap-0.5">
@@ -120,15 +150,34 @@ export default function ThesisPage() {
               <p className="mt-5 leading-relaxed text-ink-muted">{thesis.motivationDetail}</p>
             </DetailSection>
 
-            <DetailSection id="contribution">
-              <ul className="space-y-3">
-                {thesis.contributions.map((item) => (
-                  <li key={item} className="flex gap-3 text-[1.0625rem] leading-relaxed text-ink">
-                    <span aria-hidden className="mt-[0.75em] h-px w-4 shrink-0 bg-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+            <DetailSection id="contribution" wide>
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-10">
+                <div className="rounded-xl border border-line bg-surface p-5">
+                  <p className="eyebrow">Built on prior work</p>
+                  <ul className="mt-3 space-y-2.5 text-[0.9375rem] leading-relaxed text-ink-muted">
+                    {thesis.priorWork.map((item) => (
+                      <li key={item.what}>
+                        {item.what}{" "}
+                        <a
+                          href={`#ref-${item.ref}`}
+                          className="font-mono text-[0.8125rem] text-accent hover:text-accent-strong"
+                        >
+                          [{referenceNumber(item.ref)}]
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="eyebrow">What I did</p>
+                  <div className="mt-3">
+                    <Bullets items={thesis.contributions} tone="ink" />
+                  </div>
+                </div>
+              </div>
+              <p className="mt-6 max-w-[75ch] rounded-lg border-l-2 border-accent bg-accent-soft/50 px-4 py-3 leading-relaxed text-ink">
+                {thesis.increment}
+              </p>
             </DetailSection>
 
             <DetailSection id="architecture" wide>
@@ -139,110 +188,184 @@ export default function ThesisPage() {
               <ResearchArchitectureDiagram className="mt-8" />
             </DetailSection>
 
-            <DetailSection id="method">
-              <ol className="space-y-7">
-                {thesis.method.map((step, index) => (
-                  <li key={step.title} className="grid grid-cols-[2rem_1fr] gap-3">
-                    <span className="pt-0.5 font-mono text-sm text-ink-subtle">
-                      {String.fromCharCode(97 + index)}.
-                    </span>
-                    <div>
-                      <h3 className="text-lg font-medium text-ink">{step.title}</h3>
-                      <p className="mt-1.5 leading-relaxed text-ink-muted">{step.body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-              <p className="mt-8 rounded-lg border border-dashed border-line-strong px-4 py-3 text-[0.9375rem] leading-relaxed text-ink-muted">
+            <DetailSection id="method" wide>
+              <div className="max-w-[70ch]">
+                <SubHeading>Baseline relation learning (reproduced from D3G)</SubHeading>
+                <ol className="mt-4 space-y-5">
+                  {thesis.baselineMethod.map((step, index) => (
+                    <li key={step.title} className="grid grid-cols-[2rem_1fr] gap-3">
+                      <span className="pt-0.5 font-mono text-sm text-ink-subtle">
+                        {String.fromCharCode(97 + index)}.
+                      </span>
+                      <div>
+                        <h4 className="font-medium text-ink">{step.title}</h4>
+                        <p className="mt-1 leading-relaxed text-ink-muted">{step.body}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <div className="mt-10">
+                <SubHeading>Direction constraint (added in this thesis)</SubHeading>
+                <div className="mt-4">
+                  <DirectionConstraint />
+                </div>
+              </div>
+
+              <p className="mt-8 max-w-[75ch] rounded-lg border border-dashed border-line-strong px-4 py-3 text-[0.9375rem] leading-relaxed text-ink-muted">
                 <span className="font-medium text-ink">Scope. </span>
                 {thesis.scope}
               </p>
             </DetailSection>
 
-            <DetailSection id="dataset">
-              <div className="grid gap-4 sm:grid-cols-2">
-                {thesis.datasets.map((dataset) => (
-                  <div key={dataset.title} className="rounded-xl border border-line bg-surface p-5">
-                    <h3 className="font-medium text-ink">{dataset.title}</h3>
-                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{dataset.body}</p>
-                  </div>
-                ))}
-              </div>
-            </DetailSection>
-
-            <DetailSection id="evaluation" wide>
-              <p className="max-w-[70ch] leading-relaxed text-ink-muted">{thesis.evaluation.intro}</p>
-              <div className="mt-8 grid gap-6 lg:grid-cols-2">
-                {thesis.evaluation.groups.map((group) => (
-                  <div key={group.title} className="rounded-xl border border-line bg-surface">
-                    <div className="border-b border-line px-5 py-4">
-                      <h3 className="font-medium text-ink">{group.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-subtle">{group.description}</p>
-                    </div>
-                    <dl className="divide-y divide-line">
-                      {group.metrics.map((metric) => (
-                        <div key={metric.abbr} className="grid grid-cols-[5.5rem_1fr] gap-3 px-5 py-3.5">
-                          <dt className="font-mono text-[0.8125rem] font-medium text-accent">{metric.abbr}</dt>
-                          <dd>
-                            <p className="text-[0.9375rem] font-medium text-ink">{metric.name}</p>
-                            <p className="mt-0.5 text-sm leading-relaxed text-ink-muted">{metric.description}</p>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                ))}
-              </div>
-              {thesis.results ? (
-                <div className="mt-8 overflow-x-auto rounded-xl border border-line bg-surface">
-                  <table className="w-full text-left text-sm">
-                    <caption className="px-5 pt-4 text-left font-medium text-ink">Results</caption>
-                    <thead>
-                      <tr className="border-b border-line text-ink-subtle">
-                        <th scope="col" className="px-5 py-3 font-normal">Metric</th>
-                        <th scope="col" className="px-5 py-3 font-normal">Setting</th>
-                        <th scope="col" className="px-5 py-3 font-normal">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-line">
-                      {thesis.results.map((row) => (
-                        <tr key={`${row.metric}-${row.setting}`}>
-                          <td className="px-5 py-3 text-ink">{row.metric}</td>
-                          <td className="px-5 py-3 text-ink-muted">{row.setting}</td>
-                          <td className="px-5 py-3 font-mono text-ink">{row.value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : null}
-            </DetailSection>
-
-            <DetailSection id="technologies">
-              <dl className="space-y-4">
-                <div>
-                  <dt className="eyebrow">Tools, models &amp; data</dt>
-                  <dd className="mt-2">
-                    <TagList tags={thesis.technologies} />
-                  </dd>
-                </div>
-                <div>
-                  <dt className="eyebrow">Methods</dt>
-                  <dd className="mt-2">
-                    <TagList tags={thesis.methods} tone="quiet" />
-                  </dd>
-                </div>
-              </dl>
-            </DetailSection>
-
-            <DetailSection id="learned" wide>
+            <DetailSection id="setup" wide>
               <div className="grid gap-4 md:grid-cols-2">
-                {thesis.learned.map((item) => (
+                {thesis.setup.data.map((item) => (
                   <div key={item.title} className="rounded-xl border border-line bg-surface p-5">
                     <h3 className="font-medium text-ink">{item.title}</h3>
                     <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{item.body}</p>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-8">
+                <SubHeading>Test splits</SubHeading>
+                <dl className="mt-3 divide-y divide-line rounded-xl border border-line bg-surface">
+                  {thesis.setup.splits.map((item) => (
+                    <div key={item.split} className="grid gap-1 px-5 py-3 sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-4">
+                      <dt className="font-mono text-[0.875rem] text-ink">{item.split}</dt>
+                      <dd className="text-[0.9375rem] text-ink-muted">{item.definition}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div className="mt-8">
+                <SubHeading>Two-stage training</SubHeading>
+                <div className="mt-3 grid gap-4 md:grid-cols-2">
+                  {thesis.setup.training.map((item) => (
+                    <div key={item.title} className="rounded-xl border border-line bg-surface p-5">
+                      <h4 className="font-medium text-ink">{item.title}</h4>
+                      <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{item.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <SubHeading>Final relation-training configuration</SubHeading>
+                <dl className="mt-3 grid gap-x-8 rounded-xl border border-line bg-surface px-5 py-2 sm:grid-cols-2">
+                  {thesis.setup.config.map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex items-baseline justify-between gap-4 border-b border-line py-2 last:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
+                    >
+                      <dt className="text-[0.875rem] text-ink-muted">{item.label}</dt>
+                      <dd className="text-right font-mono text-[0.8125rem] text-ink">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-3 max-w-[75ch] text-[0.875rem] leading-relaxed text-ink-subtle">
+                  Thesis Table 4-1. {thesis.setup.configNote}
+                </p>
+              </div>
+            </DetailSection>
+
+            <DetailSection id="metrics" wide>
+              <p className="max-w-[70ch] leading-relaxed text-ink-muted">{thesis.evaluation.intro}</p>
+              <dl className="mt-6 divide-y divide-line rounded-xl border border-line bg-surface">
+                {thesis.evaluation.relationMetrics.map((metric) => (
+                  <div key={metric.abbr} className="grid gap-1 px-5 py-3.5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4">
+                    <dt className="font-mono text-[0.8125rem] font-medium text-accent">{metric.abbr}</dt>
+                    <dd>
+                      <p className="text-[0.9375rem] font-medium text-ink">{metric.name}</p>
+                      <p className="mt-0.5 text-sm leading-relaxed text-ink-muted">{metric.description}</p>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-3 max-w-[75ch] text-[0.875rem] leading-relaxed text-ink-subtle">
+                {thesis.evaluation.detectionNote}
+              </p>
+            </DetailSection>
+
+            <DetailSection id="results" wide>
+              <ResultsTable />
+              <div className="mt-8 max-w-[75ch] space-y-4 leading-relaxed text-ink-muted">
+                {thesis.results.summary.slice(0, -1).map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+              <p className="mt-5 max-w-[75ch] rounded-lg border-l-2 border-accent bg-accent-soft/50 px-4 py-3 leading-relaxed text-ink">
+                {thesis.results.summary[thesis.results.summary.length - 1]}
+              </p>
+            </DetailSection>
+
+            <DetailSection id="training" wide>
+              <div className="grid gap-8">
+                <ThesisFigure
+                  figure={figures.totalLoss}
+                  className="max-w-2xl"
+                  sizes="(min-width: 768px) 672px, 100vw"
+                />
+                <ThesisFigure figure={figures.relationLosses} sizes="(min-width: 1280px) 820px, 100vw" />
+              </div>
+              <div className="mt-8 max-w-[75ch]">
+                <Bullets items={thesis.training.points} />
+              </div>
+              <p className="mt-6 max-w-[75ch] rounded-lg border border-dashed border-line-strong px-4 py-3 text-[0.9375rem] leading-relaxed text-ink-muted">
+                <span className="font-medium text-ink">Training loss is not test performance. </span>
+                {thesis.training.caveat}
+              </p>
+            </DetailSection>
+
+            <DetailSection id="qualitative" wide>
+              <div className="grid gap-6 md:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] md:items-start">
+                <ThesisFigure figure={figures.inputScene} sizes="(min-width: 768px) 256px, 100vw" />
+                <div>
+                  <p className="eyebrow">How to read the graphs</p>
+                  <ul className="mt-3 space-y-2 text-[0.9375rem] leading-relaxed text-ink-muted">
+                    {thesis.qualitative.legend.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 text-[0.9375rem] leading-relaxed text-ink">{thesis.qualitative.observation}</p>
+                </div>
+              </div>
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <ThesisFigure figure={figures.baselineGraph} sizes="(min-width: 1280px) 420px, (min-width: 768px) 45vw, 100vw" />
+                <ThesisFigure figure={figures.directionGraph} sizes="(min-width: 1280px) 420px, (min-width: 768px) 45vw, 100vw" />
+              </div>
+              <p className="mt-6 max-w-[75ch] rounded-lg border border-dashed border-line-strong px-4 py-3 text-[0.9375rem] leading-relaxed text-ink-muted">
+                <span className="font-medium text-ink">Qualitative only. </span>
+                {thesis.qualitative.caveat}
+              </p>
+            </DetailSection>
+
+            <DetailSection id="findings" wide>
+              <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+                <div>
+                  <SubHeading>Supported by the experiments</SubHeading>
+                  <div className="mt-4">
+                    <Bullets items={thesis.findings} tone="ink" />
+                  </div>
+                </div>
+                <div>
+                  <SubHeading>Limitations</SubHeading>
+                  <ul className="mt-4 space-y-2.5">
+                    {thesis.limitations.map((item) => (
+                      <li key={item} className="flex gap-3 leading-relaxed text-ink-muted">
+                        <span aria-hidden className="mt-[0.55em] inline-block size-2 shrink-0 rounded-full border border-ink-subtle" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-8">
+                <p className="eyebrow">Tools, models &amp; data</p>
+                <TagList tags={thesis.technologies} className="mt-2" label="Tools, models and data" />
               </div>
             </DetailSection>
 
@@ -251,7 +374,7 @@ export default function ThesisPage() {
               <ul className="mt-6 space-y-5">
                 {thesis.future.map((item) => (
                   <li key={item.title} className="flex gap-4">
-                    <span aria-hidden className="mt-2.5 h-px w-4 shrink-0 bg-accent" />
+                    <span aria-hidden className="mt-[0.55em] inline-block size-2 shrink-0 rounded-full border border-ink-subtle" />
                     <div>
                       <h3 className="font-medium text-ink">{item.title}</h3>
                       <p className="mt-1 leading-relaxed text-ink-muted">{item.body}</p>
@@ -268,6 +391,13 @@ export default function ThesisPage() {
                   </li>
                 ))}
               </ul>
+            </DetailSection>
+
+            <DetailSection id="references">
+              <p className="mb-5 text-[0.9375rem] leading-relaxed text-ink-muted">
+                Core prior work this page relies on, as cited in the thesis bibliography.
+              </p>
+              <ReferenceList />
             </DetailSection>
 
             <div className="flex flex-col gap-4 border-t border-line pt-10 sm:flex-row sm:items-center sm:justify-between print:hidden">
