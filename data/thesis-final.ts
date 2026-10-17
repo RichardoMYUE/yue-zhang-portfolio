@@ -113,4 +113,4 @@ export const thesisFinal = {
     { title: "Learning-based robotic grasping", body: "Use object-centric scene representations as input to learned grasping and manipulation policies." },
     { title: "Open-vocabulary relation reasoning", body: "Combine relation reasoning with open-vocabulary perception.", link: { label: "Related: open-vocabulary segmentation", href: "/projects/ovseg-xray-security" } },
   ],
-} as const;
+};
