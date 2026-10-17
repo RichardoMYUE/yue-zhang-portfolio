@@ -52,7 +52,7 @@ export const pipelineStages: PipelineStage[] = [
   },
   {
     id: "detection", title: "Object Detection", summary: "What is where?",
-    description: "Localise and classify object instances. The thesis uses Deformable DETR with a ResNet-50 backbone.",
+    description: "Localise and classify object instances. The thesis uses Deformable DETR as the detection backbone.",
     group: "perception", glyph: "detection", coverage: "thesis",
     evidence: [{ label: "Object detection stage (B.Sc. thesis)", href: FLAGSHIP_HREF }],
   },
