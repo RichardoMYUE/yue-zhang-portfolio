@@ -2,7 +2,7 @@ import type { Profile, ProfileLink } from "./types";
 
 export const profile: Profile = {
   name: "Yue Zhang",
-  headline: "Robotics Perception & Scene Understanding",
+  headline: "Robot Perception & Scene Understanding",
 
   position: {
     role: "M.Sc. student",
@@ -49,8 +49,7 @@ export const profile: Profile = {
       label: "Email",
       address: "zhangyue78565@163.com",
     },
-    // TODO(Yue): add your TU Chemnitz address once you have confirmed it,
-    // e.g. { label: "TU Chemnitz", address: "…@….tu-chemnitz.de" }.
+    // TODO(Yue): add your TU Chemnitz address once you have confirmed it.
     // Never guess the format — it stays hidden while null.
     academic: null,
   },
@@ -78,10 +77,9 @@ export const profile: Profile = {
       "During his undergraduate research, he investigated visual relation reasoning for cluttered robotic grasping, combining object detection and graph-based reasoning to model dependencies between objects.",
       "His broader experience includes open-vocabulary computer vision, autonomous intelligent vehicles, ROS, embedded systems and deep learning. He is particularly interested in research that connects visual perception with structured reasoning and real robotic behaviour.",
     ],
-    // Written in first person. Review: this is Yue's own voice.
     perspective: [
-      "The question behind my undergraduate research is what a robot needs to know about a cluttered scene before it manipulates it. Detecting every object is not enough; the robot also needs to know how the objects constrain one another — which ones rest on or block others.",
-      "My bachelor’s thesis approached this as visual relation reasoning: object detections are turned into a dependency graph through graph-based reasoning. Two earlier projects broadened my background: applying open-vocabulary vision models to X-ray security imagery, where domain shift and ambiguous category names were the main difficulties, and tuning an autonomous vehicle through repeated physical track tests.",
+      "The question behind my undergraduate research is what a robot needs to know about a cluttered scene before it manipulates it. Detecting every object is not enough; the robot also needs to know how the objects constrain one another — which ones rest on, occlude or block others.",
+      "My bachelor’s thesis reproduced the D3G graph-dense relation-prediction workflow with Deformable DETR and Graph Transformer Dense on MetaGraspNetV2. I then added a direction-constraint loss to give explicit supervision to directed dependency edges and compared the baseline and modified models on easy, medium and hard test splits.",
       "During my Master’s at TU Chemnitz I would like to move closer to robots themselves: 3D and object-centric perception, object pose estimation, and connecting scene representations with grasp planning and robot decision-making.",
     ],
   },
