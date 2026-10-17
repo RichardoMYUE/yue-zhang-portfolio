@@ -26,7 +26,7 @@ export const thesisFinal = {
   ],
   architecture: [
     { id: "image", label: "Visual scene", detail: "RGB cluttered scene" },
-    { id: "detector", label: "Object detection", method: "Deformable DETR", detail: "ResNet-50 and object queries" },
+    { id: "detector", label: "Object detection", method: "Deformable DETR", detail: "Object queries provide object-level representations" },
     { id: "tokens", label: "Object representations", detail: "Object-query features as graph nodes" },
     { id: "graph-reasoning", label: "Relation reasoning", method: "Graph Transformer Dense", detail: "Dense pairwise relation modelling" },
     { id: "dependency-graph", label: "Directed dependency graph", detail: "Q×Q directed relation matrix" },
@@ -99,9 +99,9 @@ export const thesisFinal = {
     { citation: "Zhu X, Su W, Lu L, et al. Deformable DETR: Deformable Transformers for End-to-End Object Detection. ICLR, 2021." },
     { citation: "Yun S, Jeong M, Kim R, et al. Graph Transformer Networks. NeurIPS, 2019: 11983–11993." },
   ],
-  technologies: ["PyTorch", "Detectron2", "Deformable DETR", "ResNet-50", "Graph Transformer Dense", "torch-geometric", "MetaGraspNetV2"],
+  technologies: ["PyTorch", "Detectron2", "Deformable DETR", "Graph Transformer Dense", "torch-geometric", "MetaGraspNetV2"],
   methods: ["Object detection", "Visual relation reasoning", "Dense graph modelling", "Directed dependency prediction", "Direction-constraint loss"],
-  cvKeywords: ["PyTorch", "Detectron2", "Deformable DETR", "ResNet-50", "Graph Transformer Dense", "MetaGraspNetV2", "Directed dependency graph generation", "Direction-constraint loss"],
+  cvKeywords: ["PyTorch", "Detectron2", "Deformable DETR", "Graph Transformer Dense", "MetaGraspNetV2", "Directed dependency graph generation", "Direction-constraint loss"],
   learned: [
     { title: "Relation quality is bounded by detection quality", body: "Detection errors propagate into graph reasoning because dependency edges rely on correctly detected and matched object instances." },
     { title: "A new loss needs task-level validation", body: "The direction loss decreased stably during training, but test metrics were mixed across splits. Optimization behaviour and task-level performance are not the same thing." },
