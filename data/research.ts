@@ -1,8 +1,9 @@
+import type { PipelineStage, PillarId, ResearchPillar } from "./types";
 import { thesisFinal } from "./thesis-final";
 
 export const FLAGSHIP_HREF = "/research/cluttered-grasp-reasoning";
 
-export const researchPillars = [
+export const researchPillars: ResearchPillar[] = [
   {
     id: "perception", index: "01", title: "Robot Perception",
     description: "Learning visual representations that allow robots to detect and understand objects in complex environments.",
@@ -27,22 +28,22 @@ export const researchPillars = [
     questions: ["How should a structured scene representation inform which object a robot grasps next?", "What changes when perception is validated on a physical system?"],
     relatedWork: [{ label: "B.Sc. thesis — manipulation-oriented scene representation", href: FLAGSHIP_HREF }, { label: "Autonomous intelligent vehicle", href: "/projects/autonomous-intelligent-vehicle" }],
   },
-] as const;
+];
 
-export const researchNarrative = [
+export const researchNarrative: { title: string; body: string; status: "thesis" | "next" }[] = [
   { title: "Perception", body: "Detect the objects in a cluttered visual scene.", status: "thesis" },
   { title: "Scene Understanding", body: "Infer how the objects relate to and depend on each other.", status: "thesis" },
   { title: "Structured Reasoning", body: "Represent the scene as a directed dependency graph.", status: "thesis" },
   { title: "Robotic Manipulation", body: "Use that structure for grasp planning and robot action.", status: "next" },
-] as const;
+];
 
-export const pipelineGroups = [
+export const pipelineGroups: { id: PillarId; label: string }[] = [
   { id: "perception", label: "Perception" },
   { id: "understanding", label: "Scene understanding" },
   { id: "manipulation", label: "Manipulation" },
-] as const;
+];
 
-export const pipelineStages = [
+export const pipelineStages: PipelineStage[] = [
   {
     id: "scene", title: "RGB / Visual Scene", summary: "Unstructured visual input",
     description: "A cluttered scene with touching, stacked and partly occluded objects.",
@@ -79,7 +80,7 @@ export const pipelineStages = [
     group: "manipulation", glyph: "action", coverage: "next",
     evidence: [{ label: "Autonomous vehicle project", href: "/projects/autonomous-intelligent-vehicle" }],
   },
-] as const;
+];
 
 export const flagshipResearch = {
   slug: "cluttered-grasp-reasoning",
