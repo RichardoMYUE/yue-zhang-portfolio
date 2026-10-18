@@ -14,7 +14,7 @@ const SHORT_NAME: Record<ThesisModelId, string> = {
 };
 
 /**
- * Complete thesis Table 4-2: both models on every split. Within each split
+ * Complete thesis Table 4-2: both runs on every split. Within each split
  * the higher of the two values is set in medium weight; ties stay plain.
  * No deltas or percentages — the numbers are shown as reported.
  */
@@ -43,7 +43,7 @@ export function ResultsTable() {
       <div className="overflow-x-auto rounded-xl border border-line bg-surface">
         <table className="w-full min-w-[44rem] border-collapse text-left text-[0.875rem] tabular-nums">
           <caption className="sr-only">
-            Relation-prediction results of the baseline and the direction-constrained model on the
+            Relation-prediction results of the baseline run and the direction-constrained run on the
             easy, medium and hard test splits ({source}).
           </caption>
           <thead>
@@ -52,7 +52,7 @@ export function ResultsTable() {
                 Split
               </th>
               <th scope="col" className="px-4 py-3 font-normal">
-                Model
+                Run
               </th>
               {THESIS_METRIC_COLUMNS.map((column) => (
                 <th key={column.key} scope="col" className="px-3 py-3 text-right font-mono font-normal">
@@ -114,7 +114,7 @@ export function ResultsTable() {
         </table>
       </div>
       <p className="mt-2 text-[0.75rem] text-ink-subtle">
-        {source}. Darker figure = higher of the two models on that split; equal values are left plain.
+        {source}. Darker figure = higher of the two runs on that split; equal values are left plain.
       </p>
 
       <ul className="mt-5 space-y-1.5 text-[0.875rem] text-ink-muted">

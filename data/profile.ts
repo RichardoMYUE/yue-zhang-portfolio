@@ -75,13 +75,13 @@ export const profile: Profile = {
   about: {
     bio: [
       "Yue Zhang is an M.Sc. Embedded Systems student at Technische Universität Chemnitz. His current research interests focus on robot perception, scene understanding and robotic manipulation.",
-      "In his bachelor’s thesis, he reproduced a graph-based visual relation reasoning pipeline (D3G) that generates dependency graphs for cluttered grasping scenes, and extended it with a direction-constraint loss for directed dependency edges.",
+      "In his bachelor’s thesis, he adapted the D3G framework for visual dependency-graph prediction in cluttered grasping scenes and proposed and investigated an additional pairwise direction-constraint objective.",
       "His broader experience includes open-vocabulary computer vision, autonomous intelligent vehicles, ROS, embedded systems and deep learning. He is particularly interested in research that connects visual perception with structured reasoning and real robotic behaviour.",
     ],
     // Written in first person. Review: this is Yue's own voice.
     perspective: [
       "The question behind my undergraduate research is what a robot needs to know about a cluttered scene before it manipulates it. Detecting every object is not enough; the robot also needs to know how the objects constrain one another — which ones rest on or block others.",
-      "My bachelor’s thesis reproduced D3G’s graph-dense relation reasoning pipeline with a Deformable DETR detector, added a direction-constraint loss for the orientation of dependency edges, and compared both models on easy, medium and hard test scenes. Two earlier projects broadened my background: applying open-vocabulary vision models to X-ray security imagery, where domain shift and ambiguous category names were the main difficulties, and tuning an autonomous vehicle through repeated physical track tests.",
+      "My bachelor’s thesis adapted the D3G framework — a Deformable DETR detector with a Graph Transformer Dense relation module — and investigated an additional pairwise direction constraint that compares the two opposite edge scores of an object pair, evaluating it on easy, medium and hard test scenes. Two earlier projects broadened my background: applying open-vocabulary vision models to X-ray security imagery, where domain shift and ambiguous category names were the main difficulties, and tuning an autonomous vehicle through repeated physical track tests.",
       "During my Master’s at TU Chemnitz I would like to move closer to robots themselves: 3D and object-centric perception, object pose estimation, and connecting scene representations with grasp planning and robot decision-making.",
     ],
   },

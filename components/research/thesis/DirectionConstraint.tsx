@@ -1,6 +1,10 @@
 import { flagshipResearch } from "@/data/research";
 
-/** Explains the loss added in the thesis: edge existence vs. edge orientation. */
+/**
+ * Explains the objective proposed in the thesis. D3G's dense-graph BCE
+ * already supervises every directed edge; the added term compares the two
+ * opposite scores of single-direction pairs.
+ */
 export function DirectionConstraint() {
   const { direction } = flagshipResearch;
 
@@ -10,15 +14,15 @@ export function DirectionConstraint() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-line bg-surface p-5">
-          <p className="eyebrow">Baseline · dense-graph BCE</p>
-          <p className="mt-2 text-[0.9375rem] font-medium text-ink">Learns edge existence</p>
+          <p className="eyebrow">Baseline · D3G dense-graph BCE</p>
+          <p className="mt-2 text-[0.9375rem] font-medium text-ink">Independent directed-edge supervision</p>
           <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-muted">
             {direction.supervises.baseline}
           </p>
         </div>
         <div className="rounded-xl border border-accent/40 bg-accent-soft/40 p-5">
-          <p className="eyebrow text-accent">Added in this thesis · direction loss</p>
-          <p className="mt-2 text-[0.9375rem] font-medium text-ink">Learns edge orientation</p>
+          <p className="eyebrow text-accent">Additional objective · proposed in this thesis</p>
+          <p className="mt-2 text-[0.9375rem] font-medium text-ink">Pairwise relative-direction supervision</p>
           <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-muted">
             {direction.supervises.direction}
           </p>
@@ -40,7 +44,13 @@ export function DirectionConstraint() {
       </div>
 
       <div className="rounded-xl border border-line bg-surface px-5 py-4">
-        <p className="eyebrow">Training objective</p>
+        <p className="eyebrow">Direction term</p>
+        <div className="mt-2 space-y-1 overflow-x-auto font-mono text-[0.9375rem] whitespace-nowrap text-ink">
+          {direction.formula.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+        </div>
+        <p className="eyebrow mt-4">Training objective (direction-constrained run)</p>
         <p className="mt-2 overflow-x-auto font-mono text-[0.9375rem] whitespace-nowrap text-ink">
           {direction.objective}
         </p>
@@ -48,7 +58,7 @@ export function DirectionConstraint() {
           {direction.weights.map((weight) => (
             <div key={weight.label} className="flex gap-2">
               <dt className="text-ink-muted">{weight.label}</dt>
-              <dd className="font-mono text-ink">= {weight.value}</dd>
+              <dd className="text-ink">= {weight.value}</dd>
             </div>
           ))}
         </dl>

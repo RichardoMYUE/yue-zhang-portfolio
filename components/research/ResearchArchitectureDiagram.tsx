@@ -235,8 +235,8 @@ function DependencyGraphVisual({ markerId }: { markerId: string }) {
           <path d="M0 0.5 7 4 0 7.5z" fill="var(--ink-muted)" />
         </marker>
       </defs>
-      <path d="M42 23v13.5" stroke="var(--ink-muted)" strokeWidth="1.4" markerEnd={`url(#${markerId})`} />
-      <path d="M42 53v13.5" stroke="var(--ink-muted)" strokeWidth="1.4" markerEnd={`url(#${markerId})`} />
+      <path d="M42 37.5V23.5" stroke="var(--ink-muted)" strokeWidth="1.4" markerEnd={`url(#${markerId})`} />
+      <path d="M42 67.5V53.5" stroke="var(--ink-muted)" strokeWidth="1.4" markerEnd={`url(#${markerId})`} />
       {KEYS.map((k) => (
         <NodeCircle key={k} k={k} x={DEP_POS[k].x} y={DEP_POS[k].y} ring={k === "C" || k === "D"} />
       ))}
@@ -366,11 +366,12 @@ export function ResearchArchitectureDiagram({ className, figureLabel = "Figure 1
 
       <figcaption className="mt-4 max-w-[80ch] text-[0.8125rem] leading-relaxed text-ink-subtle">
         <span className="font-medium text-ink-muted">{figureLabel}.</span> Schematic of the thesis
-        pipeline (01–05) and the downstream use it is intended for (06, not implemented). An edge
-        X → Y means X has to be removed before Y can be grasped. The direction loss added in the
-        thesis supervises the orientation of these edges. Scene, relations and grasp order are
-        illustrative, not experimental output; real model outputs are shown in the qualitative
-        examples on the thesis page.
+        pipeline (01–05) and the downstream use it is intended for (06, not implemented). Following
+        the D3G convention, an edge X → Y means X cannot be moved before Y has been removed, so
+        objects without outgoing edges can be grasped first. The pairwise direction constraint
+        proposed in the thesis compares the two opposite scores of such an edge. Scene, relations
+        and grasp order are illustrative, not experimental output; real model outputs are shown
+        in the qualitative examples on the thesis page.
       </figcaption>
     </figure>
   );

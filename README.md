@@ -73,7 +73,12 @@ from what Yue wants to research next:
   in comments in `data/research.ts`. Prior work (D3G, DETR, Deformable DETR,
   Graph Transformer, MetaGraspNetV2) is credited in `priorWork` / `references`
   and never presented as Yue's own. Results are reported as mixed, exactly as in
-  thesis Table 4-2.
+  thesis Table 4-2. Additional sources: the D3G paper (§III, Table I) for the
+  benchmark protocol, the D3G evaluator for the score formula, and the training
+  logs for the four runs in `setup.runs`.
+- Deliberately not claimed: that the two relation runs form a controlled
+  ablation, or that D3G lacked direction supervision (its dense-graph BCE
+  already supervises every directed edge; the thesis adds a pairwise term).
 - Future topics (3D perception, object pose estimation, learning-based
   grasping, grasp execution on robots) appear only in `currentlyInterestedIn`,
   in pipeline stages marked `coverage: "next"` and in the thesis

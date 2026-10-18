@@ -163,6 +163,8 @@ export interface Reference {
   year: number;
   /** Volume / pages exactly as listed in the thesis bibliography. */
   details?: string;
+  /** Public code repository, if one was supplied. */
+  code?: string;
   /** What this page relies on the work for. */
   usedFor: string;
 }
@@ -224,6 +226,8 @@ export interface DirectionConstraint {
   supervises: { baseline: string; direction: string };
   /** Rules that define the loss, in order. */
   rules: string[];
+  /** Formula lines, rendered in monospace. */
+  formula: string[];
   /** Total objective, rendered as text. */
   objective: string;
   weights: LabelledValue[];
@@ -266,27 +270,34 @@ export interface FlagshipResearch {
   /** Compact CV bullets. */
   cvBullets: string[];
   architecture: ArchitectureStage[];
-  /** Baseline relation learning, as reproduced. */
+  /** D3G-based relation learning. */
   baselineMethod: TitledText[];
   direction: DirectionConstraint;
   /** What was implemented and evaluated — and what was not. */
   scope: string;
   setup: {
     data: TitledText[];
-    splits: { split: ThesisSplit; definition: string }[];
-    training: TitledText[];
+    splits: { split: ThesisSplit; criteria: string; definition: string }[];
+    splitsNote: string;
+    /** Training runs documented by logs and checkpoints. */
+    runs: { date: string; run: string; iterations: string }[];
+    runsNote: string;
     config: LabelledValue[];
     configNote: string;
   };
   evaluation: {
     intro: string;
     relationMetrics: Metric[];
+    scoreFormula: string;
+    scoreNote: string;
     detectionNote: string;
   };
   results: {
     source: string;
     models: ThesisModel[];
     rows: ThesisResultRow[];
+    /** How the two runs relate (they are not a controlled ablation). */
+    comparisonNote: string;
     summary: string[];
   };
   training: {

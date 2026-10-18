@@ -190,7 +190,7 @@ export default function ThesisPage() {
 
             <DetailSection id="method" wide>
               <div className="max-w-[70ch]">
-                <SubHeading>Baseline relation learning (reproduced from D3G)</SubHeading>
+                <SubHeading>D3G-based relation learning</SubHeading>
                 <ol className="mt-4 space-y-5">
                   {thesis.baselineMethod.map((step, index) => (
                     <li key={step.title} className="grid grid-cols-[2rem_1fr] gap-3">
@@ -207,7 +207,7 @@ export default function ThesisPage() {
               </div>
 
               <div className="mt-10">
-                <SubHeading>Direction constraint (added in this thesis)</SubHeading>
+                <SubHeading>Pairwise direction constraint (proposed in this thesis)</SubHeading>
                 <div className="mt-4">
                   <DirectionConstraint />
                 </div>
@@ -235,26 +235,47 @@ export default function ThesisPage() {
                   {thesis.setup.splits.map((item) => (
                     <div key={item.split} className="grid gap-1 px-5 py-3 sm:grid-cols-[6rem_minmax(0,1fr)] sm:gap-4">
                       <dt className="font-mono text-[0.875rem] text-ink">{item.split}</dt>
-                      <dd className="text-[0.9375rem] text-ink-muted">{item.definition}</dd>
+                      <dd>
+                        <p className="font-mono text-[0.8125rem] text-ink">{item.criteria}</p>
+                        <p className="mt-0.5 text-[0.9375rem] text-ink-muted">{item.definition}</p>
+                      </dd>
                     </div>
                   ))}
                 </dl>
+                <p className="mt-3 max-w-[75ch] text-[0.875rem] leading-relaxed text-ink-subtle">
+                  {thesis.setup.splitsNote}
+                </p>
               </div>
 
               <div className="mt-8">
-                <SubHeading>Two-stage training</SubHeading>
-                <div className="mt-3 grid gap-4 md:grid-cols-2">
-                  {thesis.setup.training.map((item) => (
-                    <div key={item.title} className="rounded-xl border border-line bg-surface p-5">
-                      <h4 className="font-medium text-ink">{item.title}</h4>
-                      <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-muted">{item.body}</p>
-                    </div>
-                  ))}
+                <SubHeading>Training runs</SubHeading>
+                <div className="mt-3 overflow-x-auto rounded-xl border border-line bg-surface">
+                  <table className="w-full min-w-[30rem] text-left text-[0.875rem] tabular-nums">
+                    <thead>
+                      <tr className="border-b border-line text-[0.75rem] text-ink-subtle">
+                        <th scope="col" className="px-5 py-2.5 font-normal">Date</th>
+                        <th scope="col" className="px-5 py-2.5 font-normal">Run</th>
+                        <th scope="col" className="px-5 py-2.5 text-right font-normal">Iterations</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {thesis.setup.runs.map((run) => (
+                        <tr key={run.date}>
+                          <td className="px-5 py-2.5 font-mono text-[0.8125rem] whitespace-nowrap text-ink-muted">{run.date}</td>
+                          <td className="px-5 py-2.5 text-ink">{run.run}</td>
+                          <td className="px-5 py-2.5 text-right font-mono text-[0.8125rem] text-ink">{run.iterations}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
+                <p className="mt-3 max-w-[75ch] text-[0.875rem] leading-relaxed text-ink-subtle">
+                  {thesis.setup.runsNote}
+                </p>
               </div>
 
               <div className="mt-8">
-                <SubHeading>Final relation-training configuration</SubHeading>
+                <SubHeading>Configuration of the direction-constrained run</SubHeading>
                 <dl className="mt-3 grid gap-x-8 rounded-xl border border-line bg-surface px-5 py-2 sm:grid-cols-2">
                   {thesis.setup.config.map((item) => (
                     <div
@@ -285,12 +306,20 @@ export default function ThesisPage() {
                   </div>
                 ))}
               </dl>
+              <div className="mt-6 rounded-xl border border-line bg-surface px-5 py-4">
+                <p className="eyebrow">Composite score</p>
+                <p className="mt-2 overflow-x-auto font-mono text-[0.9375rem] whitespace-nowrap text-ink">
+                  {thesis.evaluation.scoreFormula}
+                </p>
+                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-muted">{thesis.evaluation.scoreNote}</p>
+              </div>
               <p className="mt-3 max-w-[75ch] text-[0.875rem] leading-relaxed text-ink-subtle">
                 {thesis.evaluation.detectionNote}
               </p>
             </DetailSection>
 
             <DetailSection id="results" wide>
+              <p className="mb-6 max-w-[75ch] leading-relaxed text-ink-muted">{thesis.results.comparisonNote}</p>
               <ResultsTable />
               <div className="mt-8 max-w-[75ch] space-y-4 leading-relaxed text-ink-muted">
                 {thesis.results.summary.slice(0, -1).map((paragraph) => (

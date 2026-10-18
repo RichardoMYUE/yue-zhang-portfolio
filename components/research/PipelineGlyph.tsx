@@ -73,9 +73,9 @@ export function PipelineGlyph({ kind, className }: { kind: PipelineGlyphKind; cl
       {(kind === "graph" || kind === "reasoning") && (
         <>
           <g strokeWidth="1.3">
-            <path d="M36.5 14.5 27 33" markerEnd={`url(#${markerId})`} />
-            <path d="M43.5 14.5 53 33" markerEnd={`url(#${markerId})`} />
-            <path d="M31 39 49 39" markerEnd={`url(#${markerId})`} opacity="0.55" />
+            <path d="M27 33 36.5 14.5" markerEnd={`url(#${markerId})`} />
+            <path d="M53 33 43.5 14.5" markerEnd={`url(#${markerId})`} />
+            <path d="M49 39 31 39" markerEnd={`url(#${markerId})`} opacity="0.55" />
           </g>
           <g strokeWidth="1.4" fill="var(--surface)">
             <circle cx="40" cy="10" r="5" fill={kind === "reasoning" ? "currentColor" : "var(--surface)"} />
