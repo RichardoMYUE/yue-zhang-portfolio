@@ -20,7 +20,7 @@ export const siteConfig = {
     "Embedded Systems",
   ],
   /** ISO date of the last content update, shown in the footer and CV. */
-  lastUpdated: "2026-10-18",
+  lastUpdated: "2026-10-20",
 };
 
 export interface NavItem {

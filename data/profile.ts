@@ -47,12 +47,12 @@ export const profile: Profile = {
   email: {
     primary: {
       label: "Email",
+      address: "yue.zhang@s2026.tu-chemnitz.de",
+    },
+    secondary: {
+      label: "Alternative email",
       address: "zhangyue78565@163.com",
     },
-    // TODO(Yue): add your TU Chemnitz address once you have confirmed it,
-    // e.g. { label: "TU Chemnitz", address: "…@….tu-chemnitz.de" }.
-    // Never guess the format — it stays hidden while null.
-    academic: null,
   },
 
   /*
@@ -69,7 +69,7 @@ export const profile: Profile = {
   languages: [
     { name: "Chinese", level: "Native" },
     { name: "English", level: "IELTS 6.5" },
-    { name: "German", level: "Basic" },
+    { name: "German", level: "A1", certificate: "Goethe-Zertifikat A1" },
   ],
 
   about: {
@@ -95,9 +95,9 @@ export function getConfiguredLinks(): (ProfileLink & { url: string })[] {
   );
 }
 
-/** Verified email addresses, in display order (the academic one only once confirmed). */
+/** Public email addresses, primary first. */
 export function publicEmails() {
-  return [profile.email.primary, profile.email.academic].filter(
+  return [profile.email.primary, profile.email.secondary].filter(
     (email): email is NonNullable<typeof email> => email !== null,
   );
 }

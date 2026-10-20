@@ -48,7 +48,7 @@ so every fact is edited in exactly one place.
 
 | File | Contents |
 | --- | --- |
-| `data/profile.ts` | Name, headline, intro, research statement, interests, "currently interested in" (future only), open-to sentence, verified email, profile links, languages, About text |
+| `data/profile.ts` | Name, headline, intro, research statement, interests, "currently interested in" (future only), open-to sentence, email addresses, profile links, languages, About text |
 | `data/research.ts` | Research themes, the research-direction pipeline (each stage marked `thesis` or `next`), and the full Bachelor's thesis (narrative, contribution, architecture, method, scope, data, metrics, lessons, future work) |
 | `data/projects.ts` | Secondary projects (order = display order) |
 | `data/education.ts` | Degrees and international experience |
@@ -87,9 +87,7 @@ from what Yue wants to research next:
 Unknown facts are left as `null` / `TODO(Yue)` in the data layer and are
 **not rendered** until filled in:
 
-- `profile.email.academic` — TU Chemnitz address (only add once confirmed)
 - `profile.links[*].url` — GitHub, LinkedIn, Google Scholar, ORCID
-- `internationalExperience[0].institution` — summer-school host institution
 - vehicle project platform (controller, sensors, frameworks) in `data/projects.ts`
 
 To review before sending the link: the first-person text `profile.about.perspective`.
@@ -126,7 +124,9 @@ sitemap automatically.
 
 ### Add coursework or thesis evidence
 
-- Coursework: extend `coursework` in `data/education.ts`.
+- Coursework: courses with transcript scores go in `courseGrades` (shown with
+  scores on `/cv` only), further courses without grades in `coursework`, in
+  `data/education.ts`. A course belongs in one of the two lists, not both.
 - Thesis results live in `flagshipResearch.results.rows` (one `ThesisResultRow`
   per model and split, copied from thesis Table 4-2). The results table and the
   per-split "higher / lower" summary are generated from these rows.

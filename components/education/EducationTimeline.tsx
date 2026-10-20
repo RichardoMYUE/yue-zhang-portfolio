@@ -21,6 +21,8 @@ export function EducationTimeline({ courseLimit, showAdditional = false }: Educa
       <ol className="relative">
         {education.map((entry, index) => {
           const last = index === education.length - 1;
+          // Course names only; scores are shown on the CV.
+          const courses = [...(entry.courseGrades?.map((course) => course.name) ?? []), ...(entry.coursework ?? [])];
           return (
             <li key={entry.id} className={cn("relative pl-8", !last && "pb-9")}>
               {!last ? (
@@ -66,11 +68,11 @@ export function EducationTimeline({ courseLimit, showAdditional = false }: Educa
                 </p>
               ) : null}
 
-              {entry.coursework ? (
+              {courses.length > 0 ? (
                 <p className="mt-2 text-sm leading-relaxed text-ink-subtle">
                   <span className="text-ink-muted">Coursework: </span>
-                  {(courseLimit ? entry.coursework.slice(0, courseLimit) : entry.coursework).join(" · ")}
-                  {courseLimit && entry.coursework.length > courseLimit ? " · …" : null}
+                  {(courseLimit ? courses.slice(0, courseLimit) : courses).join(" · ")}
+                  {courseLimit && courses.length > courseLimit ? " · …" : null}
                 </p>
               ) : null}
             </li>

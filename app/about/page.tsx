@@ -23,7 +23,9 @@ export default function AboutPage() {
     { label: "B.Sc. thesis", value: flagshipResearch.shortTitle, href: flagshipResearch.href },
     {
       label: "Languages",
-      value: profile.languages.map((language) => `${language.name} (${language.level})`).join(", "),
+      value: profile.languages
+        .map((language) => `${language.name} (${[language.level, language.certificate].filter(Boolean).join(", ")})`)
+        .join(", "),
     },
     { label: "Email", value: profile.email.primary.address, href: `mailto:${profile.email.primary.address}` },
   ];

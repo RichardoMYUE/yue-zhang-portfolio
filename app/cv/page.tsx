@@ -1,5 +1,5 @@
 import { Globe, Mail, MapPin } from "lucide-react";
-import { CvBullets, CvDetailLink, CvEntry, CvLine, CvSection } from "@/components/cv/CvParts";
+import { CvBullets, CvCourseGrades, CvDetailLink, CvEntry, CvLine, CvSection } from "@/components/cv/CvParts";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { Container } from "@/components/ui/Container";
 import { PrintButton } from "@/components/ui/PrintButton";
@@ -136,13 +136,22 @@ export default function CvPage() {
               subtitle={`${entry.institution} · ${entry.location}`}
               period={formatPeriod(entry.period)}
             >
-              {entry.grade ? <CvLine label="Final grade">{entry.grade}</CvLine> : null}
+              {entry.grade ? <CvLine label={entry.gradeLabel ?? "Final grade"}>{entry.grade}</CvLine> : null}
               {entry.thesis ? <CvLine label="Thesis">{entry.thesis.label}</CvLine> : null}
               {entry.focus ? (
                 <CvLine label={entry.focusLabel ?? "Focus"}>{entry.focus.join(", ")}</CvLine>
               ) : null}
+              {entry.courseGrades ? (
+                <CvCourseGrades
+                  title="Selected Relevant Coursework & Grades"
+                  courses={entry.courseGrades}
+                  note={entry.courseGradesNote}
+                />
+              ) : null}
               {entry.coursework ? (
-                <CvLine label="Relevant coursework">{entry.coursework.join(", ")}</CvLine>
+                <CvLine label={entry.courseGrades ? "Further relevant coursework" : "Relevant coursework"}>
+                  {entry.coursework.join(", ")}
+                </CvLine>
               ) : null}
             </CvEntry>
           ))}
@@ -226,11 +235,16 @@ export default function CvPage() {
 
         {/* 9 — Languages */}
         <CvSection id="languages" title="Languages">
-          <dl className="grid gap-x-8 gap-y-1.5 text-[0.9375rem] sm:grid-cols-3 print:grid-cols-3">
+          <dl className="grid justify-start gap-x-10 gap-y-1.5 text-[0.9375rem] sm:grid-cols-[repeat(3,auto)] print:grid-cols-[repeat(3,auto)]">
             {profile.languages.map((language) => (
               <div key={language.name} className="flex gap-2">
                 <dt className="font-medium text-ink">{language.name}</dt>
-                <dd className="text-ink-muted">— {language.level}</dd>
+                <dd className="text-ink-muted">
+                  — {language.level}
+                  {language.certificate ? (
+                    <span className="whitespace-nowrap"> ({language.certificate})</span>
+                  ) : null}
+                </dd>
               </div>
             ))}
           </dl>

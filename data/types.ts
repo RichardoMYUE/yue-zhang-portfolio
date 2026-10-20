@@ -40,6 +40,8 @@ export interface EmailAddress {
 export interface Language {
   name: string;
   level: string;
+  /** Certificate backing the level, e.g. "Goethe-Zertifikat A1". */
+  certificate?: string;
 }
 
 export interface Profile {
@@ -66,13 +68,10 @@ export interface Profile {
   /** One understated sentence about the kind of involvement Yue is seeking. */
   openTo: string;
   email: {
-    /** The verified public contact address. */
+    /** Main contact address (TU Chemnitz); used for every primary mailto link. */
     primary: EmailAddress;
-    /**
-     * Future TU Chemnitz address. `null` until Yue confirms it; it is not
-     * rendered anywhere while null.
-     */
-    academic: EmailAddress | null;
+    /** Alternative address, listed after the primary one. `null` = hidden. */
+    secondary: EmailAddress | null;
   };
   links: ProfileLink[];
   languages: Language[];
@@ -375,11 +374,27 @@ export interface EducationEntry {
   period: Period;
   current: boolean;
   grade?: string;
+  /** Label for `grade`, e.g. "Overall weighted average". */
+  gradeLabel?: string;
   /** Label for `focus`, e.g. "Intended focus" for a degree in progress. */
   focusLabel?: string;
   focus?: string[];
+  /** Selected courses with their transcript scores, in display order. */
+  courseGrades?: CourseGrade[];
+  /** Where `courseGrades` come from, shown under the list on the CV. */
+  courseGradesNote?: string;
+  /** Further relevant courses without listed grades (never repeats `courseGrades`). */
   coursework?: string[];
   thesis?: LinkRef;
+}
+
+export interface CourseGrade {
+  /** Course title in English — the displayed name. */
+  name: string;
+  /** Chinese title as on the transcript, kept for checking; not rendered. */
+  nameZh: string;
+  /** Score out of 100. */
+  score: number;
 }
 
 export interface ExperienceEntry {

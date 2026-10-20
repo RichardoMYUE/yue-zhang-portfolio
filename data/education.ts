@@ -29,19 +29,30 @@ export const education: EducationEntry[] = [
     location: "Beijing, China",
     period: { start: "09/2022", end: "06/2026" },
     current: false,
-    grade: "78.55 / 100",
+    // Final official transcript, BISTU, issued 23 June 2026 (replaces the
+    // 78.55 of the February 2026 transcript). No GPA is shown on purpose.
+    grade: "78.78 / 100",
+    gradeLabel: "Overall weighted average",
     thesis: {
       label: "Visual Relation Reasoning for Robotic Grasping in Cluttered Scenes",
       href: FLAGSHIP_HREF,
     },
-    // Add further verified courses here (e.g. computer vision coursework);
-    // the CV and timeline render whatever is in this list.
+    // Scores from the same final transcript, in display order. Shown with
+    // grades on the CV only; elsewhere just the course names appear.
+    courseGrades: [
+      { name: "Intelligent Control System", nameZh: "智能控制系统", score: 95 },
+      { name: "Reinforcement Learning and Control", nameZh: "强化学习与控制", score: 94 },
+      { name: "Digital Signal Processing", nameZh: "数字信号处理", score: 92 },
+      { name: "Microcontroller Technology", nameZh: "微控制器技术", score: 91 },
+      { name: "Robotics", nameZh: "机器人学", score: 88 },
+      { name: "Intelligent Robot", nameZh: "智能机器人", score: 87 },
+    ],
+    courseGradesNote: "Scores out of 100 · final official transcript, issued 23 June 2026",
+    // Further verified courses without listed grades; courses already in
+    // `courseGrades` are not repeated here.
     coursework: [
-      "Robotics",
       "Automatic Control Theory",
-      "Intelligent Control Systems",
       "Machine Learning",
-      "Reinforcement Learning",
       "Neural Networks & Deep Learning",
       "Robot Operating System (ROS)",
       "Natural Language Processing",
@@ -54,8 +65,7 @@ export const internationalExperience: ExperienceEntry[] = [
   {
     id: "ai-summer-school",
     title: "Artificial Intelligence Summer School",
-    // TODO(Yue): add the host institution if you want it shown.
-    institution: null,
+    institution: "EPSI",
     location: "France",
     period: { start: "07/2025", end: "07/2025" },
     points: [

@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import type { CourseGrade } from "@/data/types";
 import { displayUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +66,40 @@ export function CvLine({ label, children }: { label: string; children: ReactNode
       <span className="font-medium text-ink">{label}: </span>
       {children}
     </p>
+  );
+}
+
+/**
+ * Course list with scores: two content-sized columns on wide screens and in
+ * print (so long titles stay on one line), one column on phones.
+ */
+export function CvCourseGrades({
+  title,
+  courses,
+  note,
+}: {
+  title: string;
+  courses: CourseGrade[];
+  note?: string;
+}) {
+  return (
+    <div className="avoid-break pt-1 print:pt-0.5">
+      <h4 className="font-medium text-ink">{title}</h4>
+      <dl className="mt-1.5 grid gap-x-8 sm:grid-cols-[auto_auto] print:mt-1 print:grid-cols-[auto_auto] print:gap-x-6">
+        {courses.map((course) => (
+          <div
+            key={course.name}
+            className="flex items-baseline justify-between gap-4 border-b border-line py-1.5 print:py-0.5"
+          >
+            <dt className="text-ink">{course.name}</dt>
+            <dd className="shrink-0 font-mono text-[0.8125rem] text-ink-subtle tabular-nums">
+              <span className="text-[0.9375rem] font-semibold text-ink">{course.score}</span>/100
+            </dd>
+          </div>
+        ))}
+      </dl>
+      {note ? <p className="mt-1.5 text-[0.8125rem] text-ink-subtle print:mt-1">{note}</p> : null}
+    </div>
   );
 }
 

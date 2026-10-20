@@ -82,7 +82,7 @@ export const projects: Project[] = [
     category: "engineering",
     area: "AI Engineering",
     role: "Technical Lead",
-    period: { start: "09/2024", end: "2026" },
+    period: { start: "09/2024", end: "09/2025" },
     summary:
       "Developed a domain-specific retrieval-augmented generation framework for academic environments, combining semantic and keyword-based retrieval.",
     problem:
